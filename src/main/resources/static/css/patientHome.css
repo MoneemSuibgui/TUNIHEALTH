@@ -1,0 +1,98 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #4682B4;
+    margin:0;
+    padding: 0;
+    background-image: url('https://integrass.com/wp-content/uploads/2022/03/Medical_Mobile_App.png');
+    background-size: cover;
+    background-position: center;
+}
+
+.containerA {
+    display: flex;
+    justify-content: center;
+    margin-top: 50px;
+}
+
+.searchInput{
+	  width: 300px;
+	  color: white;
+	  padding: 14px 20px;
+	  margin: 6px 0;
+	  border: none;
+	  border-radius: 6px;
+	  cursor: pointer;
+}
+.container1 {
+    margin: 100px;
+}
+
+.container2 {
+    display: flex;
+    align-items: center;
+    flex-basis: 400px;
+}
+
+.container3 {
+    display: flex;
+    justify-content: right;
+    margin-top: 20px;
+}
+
+.containerB {
+    margin-top: 40px;
+    text-align: center;
+}
+
+.containerTab1,
+.containerTab2,
+.containerTab3 {
+	 
+	display: flex;
+	justify-content: center;
+    width: 80%;
+    margin-top: 20px;
+    border-collapse: collapse;
+}
+
+.containerTab1 th,
+.containerTab2 th,
+.containerTab3 th {
+    background-color: #4682B4;
+    color: white;
+    padding: 10px;
+    border: 1px solid #ddd;
+}
+
+.containerTab1 td,
+.containerTab2 td,
+.containerTab3 td {
+    border: 2px solid #ddd;
+    padding: 3px;
+}
+
+.btn {
+    padding: 10px 20px;
+    border-radius: 5px;
+    margin: 5px;
+}
+
+.btn-success {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+}
+
+.btn-danger {
+    background-color: #f44336;
+    color: white;
+    border: none;
+}
+
+.btn-lg {
+    font-size: 16px;
+}
+
+.btn-lg i {
+    margin-right: 5px;
+}
