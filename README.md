@@ -27,7 +27,7 @@
 
         It aims to make it easier for patients to find suitable healthcare providers, book appointments at their convenience, and reduce waiting times.
 
-       The platform also benefits healthcare professionals by helping them manage their appointments more efficiently.
+        The platform also benefits healthcare professionals by helping them manage their appointments more efficiently.
 ```
 #### III- Important Considerations:
 ```
