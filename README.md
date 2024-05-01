@@ -2,9 +2,9 @@
 
 ## Domain: Healthcare, Online Appointment Scheduling
 
-#### I- Wireframe:
-###### using Figma
-[<img src="https://github.com/MoneemSuibgui/TUNIHEALTH/assets/125930635/7f9f7142-0575-4678-976d-e6231754ef3f" width="500"  />](./link/to/sql/file)
+#### I- Wireframe :
+##### Create Wireframe using Figma 
+[<img src="https://github.com/MoneemSuibgui/TUNIHEALTH/assets/125930635/a0dd5816-7e77-4cf1-a9a0-82382cea7d4a" width="500"  />](./link/to/sql/file)
 
 
 
