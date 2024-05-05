@@ -2,13 +2,7 @@
 
 ## Domain: Healthcare, Online Appointment Scheduling
 
-#### I- Wireframe :
-##### Create Wireframe using Figma (In progress)
-[<img src="https://github.com/MoneemSuibgui/TUNIHEALTH/assets/125930635/8a63041b-113a-44b0-9bf8-dd74a66bdb43" width="500"  />](./link/to/sql/file)
-
-
-
-#### II- Functionality:
+#### I- Functionality:
 
 ```
 1- Appointment Scheduling: TUNIHEALTH allows users to search for and book appointments with healthcare professionals through its platform.
@@ -27,7 +21,7 @@ Search and Discovery: Patients can search for doctors, dentists, and other healt
 
 7- Multi-Language Support: To cater to a diverse user base, platforms like TUNIHEALTH may offer support for multiple languages.
 ```
-#### III- Purpose:
+#### II- Purpose:
 ```
 The primary purpose of TUNIHEALTH is to streamline and modernize the process of booking healthcare appointments.
 
@@ -35,7 +29,7 @@ It aims to make it easier for patients to find suitable healthcare providers, bo
 
 The platform also benefits healthcare professionals by helping them manage their appointments more efficiently.
 ```
-#### IV- Important Considerations:
+#### III- Important Considerations:
 ```
 1- Regulatory Compliance: Depending on yTUNIHEALTH's location, be aware of any regulatory requirements related to healthcare data and online healthcare services.
 
@@ -46,7 +40,7 @@ The platform also benefits healthcare professionals by helping them manage their
 4- User-Friendly Interface: Design an intuitive and user-friendly interface for both patients and healthcare professionals.
 ```
 
-#### V- Our Future GOAL!!!
+#### IV- Our Future GOAL!!!
 
 ##### TUNIHEALTH is a healthcare appointment scheduling platform inspired by Doctolib we'll Try to Integrate :
 ```
