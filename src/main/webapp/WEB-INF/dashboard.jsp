@@ -33,9 +33,8 @@ background-image: url('img/image_1 (2).png');
         <div class="bodycontainer">
             <div class="info">
                 <div class="buttonInfo">
-                    <a href="/" id="buttonBody">Description</a>
                     <a href="/" id="buttonBody">Doctors</a>
-                    <a href="/" id="buttonBody">Actualities</a>
+                    <a href="/actualities" id="buttonBody">Actualities</a>
                 </div>
                 <div class="bodyInfo">
                 <c:forEach var="doctor" items="${doctors }">
@@ -51,7 +50,7 @@ background-image: url('img/image_1 (2).png');
         </div>
 
         <div class="Status">
-            <p id="numberOfDoctors">Number Of Doctors : <c:out value="${patients.size() }"/></p>
+            <p id="numberOfDoctors">Number Of Doctors : <c:out value="${doctors.size() }"/></p>
             <p id="numberOfUsers" >Number Of Users : <c:out value="${patients.size() }"/></p>
         </div>
     </div>
