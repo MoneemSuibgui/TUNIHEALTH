@@ -27,14 +27,16 @@ import tunihealth.models.Appointment;
 import tunihealth.models.Doctor;
 import tunihealth.models.LoggedUser;
 import tunihealth.models.Patient;
+import tunihealth.models.Post;
 import tunihealth.services.AppointmentService;
 import tunihealth.services.DoctorService;
 import tunihealth.services.PatientService;
+import tunihealth.services.PostService;
 
 @Controller
 public class DoctorController {
 
-	// inject DoctorService using @Autowired annotation
+	// inject services using @Autowired annotation
 	@Autowired
 	private DoctorService service;
 
@@ -43,6 +45,9 @@ public class DoctorController {
 
 	@Autowired
 	private AppointmentService appointmentService;
+
+	@Autowired
+	private PostService postService;
 
 	private static String doctor_pictures_path = "src/main/resources/static/doctors_pictures/";
 
@@ -118,39 +123,37 @@ public class DoctorController {
 
 	// Display route doctor home page
 	@GetMapping("/doctor/dashboard")
-	public String doctorHome(HttpSession session, Model model) {
+	public String doctorHome(HttpSession session, Model model, @ModelAttribute("post") Post post) {
 		if (session.getAttribute("doctor_id") != null) {
 			Doctor currentDoctor = this.service.GetById((Long) session.getAttribute("doctor_id"));
-			model.addAttribute("currentDoctor",currentDoctor);
+			model.addAttribute("currentDoctor", currentDoctor);
 			model.addAttribute("today", new Date());
 			model.addAttribute("localDateToday", LocalDate.now());
-			model.addAttribute("count",calculateHoldAppointment(currentDoctor));
+			model.addAttribute("count", calculateHoldAppointment(currentDoctor));
+			model.addAttribute("posts",postService.getAll() );
 			System.out.println(currentDoctor.getAppointments().size());
 			return "doctorHome.jsp";
 		}
 		return "redirect:/";
 	}
-	
-	
+
 	public int calculateHoldAppointment(Doctor doctor) {
-		return doctor.getAppointments().size()-(doctor.getValidatedAppointments().size()+doctor.getDeletedAppointments().size());
-	 
+		return doctor.getAppointments().size()
+				- (doctor.getValidatedAppointments().size() + doctor.getDeletedAppointments().size());
+
 	}
-	
+
 	// Display hold appointment for doctor
 	@GetMapping("/appointments/doctor/{id}")
-	public String getHoldAppointmentForDoctor(@PathVariable("id") Long id,HttpSession session,Model model) {
-		if(session.getAttribute("doctor_id")!=null) {
-			Doctor doctor=this.service.GetById(id);
+	public String getHoldAppointmentForDoctor(@PathVariable("id") Long id, HttpSession session, Model model) {
+		if (session.getAttribute("doctor_id") != null) {
+			Doctor doctor = this.service.GetById(id);
 			model.addAttribute("currentDoctor", doctor);
 			model.addAttribute("doctorAppointments", appointmentService.getAllAppointmentByDoctor(doctor));
 			return "holdAppointment.jsp";
 		}
 		return "redirect:/";
 	}
-	
-	
-	
 
 	// Display route patient page
 	@GetMapping("/patient/{id}")
@@ -164,31 +167,57 @@ public class DoctorController {
 		}
 		return "redirect:/";
 	}
-	
+
 	// add appointment to doctor hold appointments list
 	@PostMapping("/validate/{id}")
-	public String validateAppointment(@PathVariable("id") Long appointmentId ,HttpSession session) {
-		Long doctorId =(Long)session.getAttribute("doctor_id");
-		Doctor doctor=this.service.GetById(doctorId);
-		Appointment appointment=this.appointmentService.GetById(appointmentId);
-		// add the appointment to the validated appointment list and removed from hold appointments list doctor
+	public String validateAppointment(@PathVariable("id") Long appointmentId, HttpSession session) {
+		Long doctorId = (Long) session.getAttribute("doctor_id");
+		Doctor doctor = this.service.GetById(doctorId);
+		Appointment appointment = this.appointmentService.GetById(appointmentId);
+		// add the appointment to the validated appointment list and removed from hold
+		// appointments list doctor
 		doctor.getValidatedAppointments().add(appointment);
 		this.service.update(doctor);
-		return "redirect:/appointments/doctor/"+doctorId;
+		return "redirect:/appointments/doctor/" + doctorId;
 	}
 
 	// delete appointment to doctor hold appointments list
 	@DeleteMapping("/delete/appointment/{id}")
-	public String deleteAppointmentDoctor(@PathVariable("id") Long appointmentId,HttpSession session) {
-		Long doctorId=(Long)session.getAttribute("doctor_id");
-		Doctor currentDoctor=this.service.GetById(doctorId);
-		Appointment appointment=this.appointmentService.GetById(appointmentId);
+	public String deleteAppointmentDoctor(@PathVariable("id") Long appointmentId, HttpSession session) {
+		Long doctorId = (Long) session.getAttribute("doctor_id");
+		Doctor currentDoctor = this.service.GetById(doctorId);
+		Appointment appointment = this.appointmentService.GetById(appointmentId);
 
 		// add appointment to the history of deletedAppointments list of doctor
 		currentDoctor.getDeletedAppointments().add(appointment);
 		System.out.println(currentDoctor.getDeletedAppointments().size());
 		this.service.update(currentDoctor);
-		return "redirect:/appointments/doctor/"+doctorId;
+		return "redirect:/appointments/doctor/" + doctorId;
+	}
+
+	// Action route add new post
+	@PostMapping("/create/post")
+	public String addPost(@Valid @ModelAttribute("post") Post post, BindingResult result, HttpSession session) {
+		if (result.hasErrors()) {
+			// display errors message in jsp page
+			return "doctorHome.jsp";
+		}
+		// get the current doctor(logged doctor)
+		Long doctor_id = (Long) session.getAttribute("doctor_id");
+		Doctor loggedDoctor = this.service.GetById(doctor_id);
+		// set the creator of the post(logged doctor)and save it
+		post.setDoctor(loggedDoctor);
+		postService.create(post);		
+		return "redirect:/doctor/dashboard";
+	}
+	
+	// Dispaly route Actualities jsp page
+	@GetMapping("/actualities")
+	public String actualities(Model model) {
+		model.addAttribute("posts", postService.getAll());
+		model.addAttribute("doctors", service.getAll());
+		model.addAttribute("patients", patientService.allPatients());
+		return "actualities.jsp";
 	}
 
 	// Logout route
