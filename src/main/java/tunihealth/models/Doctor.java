@@ -1,40 +1,31 @@
 package tunihealth.models;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
 import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
+import tunihealth.abstracts.DBEntity;
 
 @Entity
 @Table(name = "doctors")
-public class Doctor {
+public class Doctor extends DBEntity {
+	// Inherit id ,createdAt,updatedAt from DBEntity
 
 	// member variables
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
-
 	@NotEmpty(message = "* Doctor full name must be not empty")
 	@Size(min = 6, message = "* Full Name must at least 6 characyers")
 	private String fullName;
@@ -75,36 +66,21 @@ public class Doctor {
 
 	private String path_image;
 
-
 	@NotEmpty(message = "* Description must be not empty")
 	@Size(min = 8, message = "* Description must at least 8 characters")
 	private String description;
 
-	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	@Column(updatable = false)
-	private Date createdAt;
-
-	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	private Date updatedAt;
-
 	// 1:n one doctor can have many appointments
 	@OneToMany(mappedBy = "doctor", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private List<Appointment> appointments;
-	
-	
-	
+
 	// 1:n relationship doctor have hisrory for deleted appointments
-	@OneToMany(fetch=FetchType.LAZY,cascade=CascadeType.ALL)
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private List<Appointment> deletedAppointments;
-	
-	
+
 	// n:n relationship between doctors and appointments
-	@ManyToMany(fetch=FetchType.LAZY,cascade=CascadeType.ALL)
-	@JoinTable(
-			name="validated_appointments",
-			joinColumns=@JoinColumn(name="doctor_id"),
-			inverseJoinColumns=@JoinColumn(name="appointment_id")
-			)
+	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JoinTable(name = "validated_appointments", joinColumns = @JoinColumn(name = "doctor_id"), inverseJoinColumns = @JoinColumn(name = "appointment_id"))
 	private List<Appointment> validatedAppointments;
 
 	// n:n relashionship doctor can like patients
@@ -112,29 +88,16 @@ public class Doctor {
 	@JoinTable(name = "likes", joinColumns = @JoinColumn(name = "doctor_id"), inverseJoinColumns = @JoinColumn(name = "patient_id"))
 	private List<Patient> favouritePatients;
 
+	// relationship between doctor & post
+	// (One doctor can add Many post ,One post belongs(created by) to One doctor)
+	@OneToMany(fetch = FetchType.LAZY,cascade=CascadeType.ALL)
+	private List<Post> posts;
+
 	// beans constructor
 	public Doctor() {
 	}
 
 	// getters & setters
-	@PrePersist
-	protected void createdOn() {
-		this.createdAt = new Date();
-	}
-
-	@PreUpdate
-	protected void updatedOn() {
-		this.updatedAt = new Date();
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
 	public String getFullName() {
 		return fullName;
 	}
@@ -255,28 +218,20 @@ public class Doctor {
 		this.dates = dates;
 	}
 
+	public List<Post> getPosts() {
+		return posts;
+	}
+
+	public void setPosts(List<Post> posts) {
+		this.posts = posts;
+	}
+
 	public List<Patient> getFavouritePatients() {
 		return favouritePatients;
 	}
 
 	public void setFavouritePatients(List<Patient> favouritePatients) {
 		this.favouritePatients = favouritePatients;
-	}
-
-	public Date getCreatedAt() {
-		return createdAt;
-	}
-
-	public void setCreatedAt(Date createdAt) {
-		this.createdAt = createdAt;
-	}
-
-	public Date getUpdatedAt() {
-		return updatedAt;
-	}
-
-	public void setUpdatedAt(Date updatedAt) {
-		this.updatedAt = updatedAt;
 	}
 
 }

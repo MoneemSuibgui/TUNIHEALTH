@@ -1,39 +1,28 @@
 package tunihealth.models;
 
-import java.util.Date;
 import java.util.List;
 
-import org.springframework.format.annotation.DateTimeFormat;
-
 import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
+import tunihealth.abstracts.DBEntity;
 
 @Entity
 @Table(name = "patients")
-public class Patient {
+public class Patient extends DBEntity {
+	// Inherit id ,createdAt,updatedAt from DBEntity
 
 	// member variables
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
-
 	@NotEmpty(message = "First name must be not empty")
 	@Size(min = 3, max = 20, message = "First name must be between 3 & 20 characters")
 	private String firstName;
@@ -60,47 +49,31 @@ public class Patient {
 
 	private String url_picture;
 
-	@Column(updatable = false)
-	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	private Date createdAt;
-
-	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	private Date updatedAt;
-
 	// One patient can have create appointments
 	@OneToMany(mappedBy = "patient", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private List<Appointment> appointments;
-
 
 	// n:n relashionship patient can like many doctors
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "likes", joinColumns = @JoinColumn(name = "patient_id"), inverseJoinColumns = @JoinColumn(name = "doctor_id"))
 	private List<Doctor> favouriteDoctors;
+	
+	
+	// create middle table likes posts
+	// one patient can like many posts
+	@ManyToMany(fetch=FetchType.LAZY)
+	@JoinTable(
+			name="likes_posts",
+			joinColumns=@JoinColumn(name="patient_id"),
+			inverseJoinColumns=@JoinColumn(name="post_id")
+			)
+	List<Post> likedPosts;
 
 	// beans constructor
 	public Patient() {
 	}
 
 	// getters & setters
-
-	@PrePersist
-	protected void crearedOn() {
-		this.createdAt = new Date();
-	}
-
-	@PreUpdate
-	protected void updatedOn() {
-		this.updatedAt = new Date();
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
 	public String getFirstName() {
 		return firstName;
 	}
@@ -149,22 +122,6 @@ public class Patient {
 		this.confirm = confirm;
 	}
 
-	public Date getCreatedAt() {
-		return createdAt;
-	}
-
-	public void setCreatedAt(Date createdAt) {
-		this.createdAt = createdAt;
-	}
-
-	public Date getUpdatedAt() {
-		return updatedAt;
-	}
-
-	public void setUpdatedAt(Date updatedAt) {
-		this.updatedAt = updatedAt;
-	}
-
 	public String getUrl_picture() {
 		return url_picture;
 	}
@@ -189,6 +146,12 @@ public class Patient {
 		this.favouriteDoctors = favouriteDoctors;
 	}
 
+	public List<Post> getLikedPosts() {
+		return likedPosts;
+	}
 
+	public void setLikedPosts(List<Post> likedPosts) {
+		this.likedPosts = likedPosts;
+	}
 
 }

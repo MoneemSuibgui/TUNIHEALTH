@@ -2,37 +2,28 @@ package tunihealth.models;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
+import tunihealth.abstracts.DBEntity;
 
 @Entity
 @Table(name = "appointments")
-public class Appointment {
+public class Appointment extends DBEntity{
+	// Inherit id ,createdAt,updatedAt from DBEntity
 
 	// member variables
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
-
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	@FutureOrPresent(message = "Appointment date must be in future")
 	private LocalDate date;
@@ -42,13 +33,6 @@ public class Appointment {
 	@NotEmpty(message = "Reason must not be empty")
 	@Size(min = 10, message = "Reason must be at least 10 characters")
 	private String reason;
-
-	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	@Column(updatable = false)
-	private Date createdAt;
-
-	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	private Date updatedAt;
 
 	// Many appointments can belongs to one patient
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -80,24 +64,6 @@ public class Appointment {
 	}
 
 	// getters & setters
-	@PrePersist
-	protected void createdOn() {
-		this.createdAt = new Date();
-	}
-
-	@PreUpdate
-	protected void updatedOn() {
-		this.updatedAt = new Date();
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
 	public LocalDate getDate() {
 		return date;
 	}
@@ -121,23 +87,6 @@ public class Appointment {
 	public void setReason(String reason) {
 		this.reason = reason;
 	}
-
-	public Date getCreatedAt() {
-		return createdAt;
-	}
-
-	public void setCreatedAt(Date createdAt) {
-		this.createdAt = createdAt;
-	}
-
-	public Date getUpdatedAt() {
-		return updatedAt;
-	}
-
-	public void setUpdatedAt(Date updatedAt) {
-		this.updatedAt = updatedAt;
-	}
-
 	public Patient getPatient() {
 		return patient;
 	}
