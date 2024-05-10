@@ -1,5 +1,6 @@
 package tunihealth.controllers;
 
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -23,8 +24,10 @@ import jakarta.validation.Valid;
 import tunihealth.models.Doctor;
 import tunihealth.models.LoggedUser;
 import tunihealth.models.Patient;
+import tunihealth.models.Post;
 import tunihealth.services.DoctorService;
 import tunihealth.services.PatientService;
+import tunihealth.services.PostService;
 
 @Controller
 public class PatientController {
@@ -35,6 +38,10 @@ public class PatientController {
 	
 	@Autowired
 	private DoctorService doctorService;
+	
+	@Autowired
+	private PostService postService;
+	
 	
 
 	// path folder to store images in the server not into the database
@@ -90,6 +97,7 @@ public class PatientController {
 		}
 		Patient patient = this.service.GetById((Long) session.getAttribute("patient_id"));
 		modelView.addAttribute("patient", patient);
+		modelView.addAttribute("posts", postService.getAll());
 		modelView.addAttribute("today",LocalDate.now());
 		return "patientHome.jsp";
 	}
@@ -133,6 +141,30 @@ public class PatientController {
 		this.service.savePatient(currentPatient);
 		return "redirect:/show/"+appointmentId;
 	}
+	
+	//  like patient
+	@GetMapping("/like/{postId}")
+	public String likePost(@PathVariable("postId") Long postId,HttpSession session) {
+		Long patientId=(Long)session.getAttribute("patient_id");
+		Patient loggedPatient=this.service.GetById(patientId);
+		Post currentPost=postService.getById(postId);
+		loggedPatient.getLikedPosts().add(currentPost);
+		this.service.update(loggedPatient);
+		return "redirect:/user/dashboard";
+	}
+	
+	// dislike post
+	@GetMapping("/dislike/{postId}")
+	public String dislikePost(@PathVariable("postId")Long postId,HttpSession session) {
+		Long patientId=(Long)session.getAttribute("patient_id");
+		Patient loggedPatient=this.service.GetById(patientId);
+		Post currentPost=postService.getById(postId);
+		loggedPatient.getLikedPosts().remove(currentPost);
+		this.service.update(loggedPatient);
+		return "redirect:/user/dashboard";
+	}
+	
+	
 
 	// logout route
 	@GetMapping("/logout")
