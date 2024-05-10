@@ -72,5 +72,10 @@ public class PatientService {
 	public List<Patient> allPatients() {
 		return this.repository.findAll();
 	}
+	
+	// update patient
+	public Patient update(Patient patient) {
+		return this.repository.save(patient);
+	}
 
 }
